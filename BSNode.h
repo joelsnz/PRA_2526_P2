@@ -7,7 +7,8 @@ template <typename T>
 class BSNode {
   public:
     T elem;
-    BSNode<T>* left, right;
+    BSNode<T>* left;
+    BSNode<T>* right;
 
     BSNode(T elem, BSNode<T>* left=nullptr, BSNode<T>* right=nullptr) : elem(elem), left(left), right(right) {}
 

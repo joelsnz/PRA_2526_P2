@@ -6,5 +6,9 @@ bin/testHashTable: testHashTable.cpp HashTable.h Dict.h TableEntry.h
 	mkdir -p bin
 	g++ -o bin/testHashTable testHashTable.cpp
 
+bin/testBSTree: testBSTree.cpp BSNode.h BSTree.h TableEntry.h
+	mkdir -p bin
+	g++ -o bin/testBSTree testBSTree.cpp
+
 clean:
 	rm -rf *.o *.gch bin
