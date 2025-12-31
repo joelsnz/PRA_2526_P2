@@ -22,11 +22,13 @@ class BSTree {
     }
 
     BSNode<T>* insert(BSNode<T>* n, T e) {
-      if(n == nullptr)
-        throw std::runtime_error("Elemento no encontrado");
-      if(n->elem == e)
+      if(n == nullptr) {
+        this->nelem++;
+        return new BSNode<T>(e);
+      }
+      else if(n->elem == e)
         throw std::runtime_error("Elemento duplicado");
-      if(n->elem < e)
+      else if(n->elem < e)
         n->right = insert(n->right, e);
       else
         n->left = insert(n->left, e);
@@ -36,13 +38,13 @@ class BSTree {
     void print_inorder(std::ostream &out, const BSNode<T>* n) const {
       if(n != nullptr) {
         print_inorder(out, n->left);
-        out << *n;
+        out << *n << " ";
         print_inorder(out, n->right);
       }
     }
 
     T max(BSNode<T>* n) const {
-      if(n != nullptr)
+      if(n == nullptr)
         throw std::runtime_error("Elemento no encontrado");
       if(n->right != nullptr)
         return max(n->right);
@@ -50,7 +52,7 @@ class BSTree {
     }
 
     BSNode<T>* remove_max(BSNode<T>* n) {
-      if(n->right != nullptr)
+      if(n->right == nullptr)
         return n->left;
       n->right = remove_max(n->right);
       return n;
@@ -60,10 +62,11 @@ class BSTree {
       if(n == nullptr)
         throw std::runtime_error("Elemento no encontrado");
       else if(n->elem < e)
-        n->left = remove(n->left, e);
-      else if(n->elem > e)
         n->right = remove(n->right, e);
+      else if(n->elem > e)
+        n->left = remove(n->left, e);
       else {
+        this->nelem--;
         if(n->left != nullptr && n->right != nullptr) {
           n->elem = max(n->left);
           n->left = remove_max(n->left);
@@ -98,7 +101,7 @@ class BSTree {
       return this->search(e);
     }
 
-    void insert(T e) { insert(root, e); }
+    void insert(T e) { this->root = insert(root, e); }
 
     friend std::ostream& operator<<(std::ostream &out, const BSTree<T> &bst) {
       bst.print_inorder(out, bst.root);
