@@ -13,32 +13,35 @@ private:
   BSTree<TableEntry<V>>* tree;
   
 public:
-  BSTreeDict() { this->tree = new BSTree<V>(); }
+  BSTreeDict() { this->tree = new BSTree<TableEntry<V>>(); }
 
   ~BSTreeDict() { delete this->tree; }
 
   friend std::ostream& operator<<(std::ostream &out, const BSTreeDict<V> &bs) {
-    out << bs->tree;
+    out << *(bs.tree);
     return out;
   }
 
-  V operator[](std::string key) { return this->tree[key].elem; }
-
-  virtual void insert(std::string key, V value) {
-    
+  V operator[](std::string key) {
+    return this->tree->search(TableEntry<V>(key)).value;
   }
 
-  virtual V search(std::string key) {
-
+  void insert(std::string key, V value) override {
+    this->tree->insert(TableEntry<V>(key, value));
   }
 
-  virtual V remove(std::string key) {
-
+  V search(std::string key) override {
+    return (*this)[key];
   }
 
-  virtual int entries() const {
-
+  V remove(std::string key) override {
+    V ret = this->search(key);
+    this->tree->remove(TableEntry<V>(key));
+    return ret;
   }
+
+  int entries() const override { return this->tree->size(); }
 };
 
 #endif // BSTREEDICT_H
+
