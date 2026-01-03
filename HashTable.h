@@ -44,6 +44,7 @@ public:
       out << "== Cubeta " << i << " ==" << std::endl << std::endl;
       out << th.table[i] << std::endl << std::endl;
     }
+    out << "==============" << std::endl;
 
     return out;
   }
@@ -53,13 +54,13 @@ public:
       int pos = this->table[i].search(key);
       if(pos != -1) return this->table[i][pos].value;
     }
-    throw std::runtime_error("No existe la clave " + key);
+    throw std::runtime_error("Key '" + key + "' not found");
   }
 
   void insert(std::string key, V value) override {
     int pos = h(key);
     if(this->table[pos].search(key) != -1)
-      throw std::runtime_error("La llave " + key + " ya existe");
+      throw std::runtime_error("Key '" + key + "' already exists");
     this->table[pos].prepend(TableEntry<V>(key, value));
     n++;
   }
@@ -69,7 +70,7 @@ public:
     int pos = table[idx].search(TableEntry<V>(key));
 
     if(pos == -1)
-      throw std::runtime_error("Clave no encontrada: " + key);
+      throw std::runtime_error("Key '" + key + "' not found");
 
     return table[idx].get(pos).value;
   }
@@ -79,7 +80,7 @@ public:
     int pos = table[idx].search(TableEntry<V>(key));
 
     if(pos == -1)
-      throw std::runtime_error("Clave no encontrada: " + key);
+      throw std::runtime_error("Key '" + key + "' not found");
 
     this->n--;
 
