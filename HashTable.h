@@ -19,7 +19,7 @@ private:
   int h(std::string key) {
     int sum = 0;
 
-    for(char c : key)
+    for (char c : key)
       sum += int(c);
 
     return sum % this->max;
@@ -27,20 +27,19 @@ private:
 
 public:
   HashTable(int size) : Dict<V>(), n{0}, max{size} {
-    this->table = new ListLinked<TableEntry<V>>[max];
+    table = new ListLinked<TableEntry<V>>[max];
   }
 
-  ~HashTable() { delete[] this->table; }
+  ~HashTable() { delete[] table; }
 
-  int capacity() const { return this->max; }
+  int capacity() const { return max; }
 
-  friend std::ostream &operator<<(std::ostream &out,
-                                  const HashTable<V> &th) {
+  friend std::ostream &operator<<(std::ostream &out, const HashTable<V> &th) {
     out << "HashTable [entries: " << th.entries();
     out << ", capacity: " << th.capacity() << "]" << std::endl;
     out << "==============" << std::endl << std::endl;
 
-    for(int i = 0; i < th.max; i++) {
+    for (int i = 0; i < th.max; i++) {
       out << "== Cubeta " << i << " ==" << std::endl << std::endl;
       out << th.table[i] << std::endl << std::endl;
     }
@@ -50,18 +49,19 @@ public:
   }
 
   V operator[](std::string key) {
-    for(int i = 0; i < this->n; i++) {
-      int pos = this->table[i].search(key);
-      if(pos != -1) return this->table[i][pos].value;
+    for (int i = 0; i < n; i++) {
+      int pos = table[i].search(key);
+      if (pos != -1)
+        return table[i][pos].value;
     }
     throw std::runtime_error("Key '" + key + "' not found");
   }
 
   void insert(std::string key, V value) override {
     int pos = h(key);
-    if(this->table[pos].search(key) != -1)
+    if (table[pos].search(key) != -1)
       throw std::runtime_error("Key '" + key + "' already exists");
-    this->table[pos].prepend(TableEntry<V>(key, value));
+    table[pos].prepend(TableEntry<V>(key, value));
     n++;
   }
 
@@ -69,7 +69,7 @@ public:
     int idx = h(key);
     int pos = table[idx].search(TableEntry<V>(key));
 
-    if(pos == -1)
+    if (pos == -1)
       throw std::runtime_error("Key '" + key + "' not found");
 
     return table[idx].get(pos).value;
@@ -79,15 +79,15 @@ public:
     int idx = h(key);
     int pos = table[idx].search(TableEntry<V>(key));
 
-    if(pos == -1)
+    if (pos == -1)
       throw std::runtime_error("Key '" + key + "' not found");
 
-    this->n--;
+    n--;
 
-    return this->table[idx].remove(pos).value;
+    return table[idx].remove(pos).value;
   }
 
-  int entries() const override { return this->n; }
+  int entries() const override { return n; }
 };
 
 #endif // HASHTABLE_H
